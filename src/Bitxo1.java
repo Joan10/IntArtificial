@@ -1,6 +1,17 @@
 package agents;
 
 // Exemple de Bitxo
+/*
+1. Evitar col·lisions
+2. Fer esses quan te disapren
+3. Quan tens poca vida amagar-te.
+4. Teletransportar-te si tens poca vida i t'encares amb l'enemic o bé dispara ell primer.
+5. Si el dus darrere esquivar-lo d'una altra manera, com ara girar a una paret i sortir-li per darrere.
+6. Començam a la ofensiva.
+
+
+*/
+
 
 public class Bitxo1 extends Agent
 {
@@ -53,7 +64,15 @@ public class Bitxo1 extends Agent
                 // si veu la nau, dispara
                 if (estat.objecteVisor[CENTRAL] == NAU && estat.impactesRival < 5)
                 {
-                    dispara();   //bloqueig per nau, no giris dispara
+                    dispara();   
+       if (estat.objecteVisor[DRETA   ]== PARET && estat.distanciaVisors[DRETA   ]<=dist)
+           return true;
+       
+       return false;
+    }
+
+    double minimaDistanciaVisors()
+    {//bloqueig per nau, no giris dispara
                 }
                 else // hi ha un obstacle, gira i parteix
                 {
