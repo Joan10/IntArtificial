@@ -9,7 +9,7 @@ public class Bitxo1 extends Agent
     final int PARET = 0;
     final int NAU   = 1;
     final int RES   = -1;
-    final int hola = 5;
+    final int hola = 1;
     final int ESQUERRA = 0;
     final int CENTRAL  = 1;
     final int DRETA    = 2;
