@@ -1,26 +1,19 @@
 package agents;
 
 // Exemple de Bitxo
-/*
-1. Evitar col·lisions
-2. Fer esses quan te disapren
-3. Quan tens poca vida amagar-te.
-4. Teletransportar-te si tens poca vida i t'encares amb l'enemic o bé dispara ell primer.
-5. Si el dus darrere esquivar-lo d'una altra manera, com ara girar a una paret i sortir-li per darrere.
-6. Començam a la ofensiva.
-
-
-*/
-
 
 public class Bitxo1 extends Agent
 {
     static final boolean DEBUG = false;
+    
+    boolean carril_trobat = false;
 
+    final int MEITAT = 400;
+    
     final int PARET = 0;
     final int NAU   = 1;
     final int RES   = -1;
-    final int hola = 1;
+
     final int ESQUERRA = 0;
     final int CENTRAL  = 1;
     final int DRETA    = 2;
@@ -52,6 +45,37 @@ public class Bitxo1 extends Agent
     {
         temps++;
         estat = estatCombat();
+        
+        if (temps == 1 && !estat.veigEnemic){  
+            //Giram tot d'una a l'esquerra per trobar l'enemic
+            if (estat.posicio.x < MEITAT){
+                gira(-90);
+            }else{
+                gira(90);
+            }
+        }else if(temps > 1 && !estat.veigEnemic && !carril_trobat){
+            setAngleVisors(0);          
+            if (estat.interseccioVisor[ESQUERRA].x == 31 && estat.interseccioVisor[CENTRAL].x == 31 && estat.interseccioVisor[DRETA].x == 31){
+                System.out.println("Trobam paret interior");
+                carril_trobat=true;
+                endavant();
+            }else if (estat.interseccioVisor[ESQUERRA].y == 31 && estat.interseccioVisor[CENTRAL].y == 31 && estat.interseccioVisor[DRETA].y == 31){
+                System.out.println("Trobam paret interior");
+                carril_trobat=true;
+                endavant();
+                
+            }else if (estat.interseccioVisor[ESQUERRA].y == 569 && estat.interseccioVisor[CENTRAL].y == 569 && estat.interseccioVisor[DRETA].y == 569){
+                System.out.println("Trobam paret interior");
+
+                carril_trobat=true;
+                endavant();
+            }else{
+                System.out.println("No trobam la paret: giram");
+                gira(90);
+            }
+            
+        }
+                
         if (espera > 0) {
             if (DEBUG) System.out.println("Espera "+espera);
             espera--;
@@ -64,15 +88,7 @@ public class Bitxo1 extends Agent
                 // si veu la nau, dispara
                 if (estat.objecteVisor[CENTRAL] == NAU && estat.impactesRival < 5)
                 {
-                    dispara();   
-       if (estat.objecteVisor[DRETA   ]== PARET && estat.distanciaVisors[DRETA   ]<=dist)
-           return true;
-       
-       return false;
-    }
-
-    double minimaDistanciaVisors()
-    {//bloqueig per nau, no giris dispara
+                    dispara();   //bloqueig per nau, no giris dispara
                 }
                 else // hi ha un obstacle, gira i parteix
                 {
@@ -86,6 +102,8 @@ public class Bitxo1 extends Agent
                 endavant();
                 if (estat.veigEnemic)
                 {
+                    setVelocitatLineal(5);
+                    setVelocitatAngular(5);
                     if (estat.sector == 2 || estat.sector == 3)
                     {
                         mira(estat.posicioEnemic.x, estat.posicioEnemic.y);
@@ -99,6 +117,10 @@ public class Bitxo1 extends Agent
                     {
                         esquerra();
                     }
+                }else{
+                     setVelocitatLineal(2);
+                     setVelocitatAngular(2);
+
                 }
 
                 // Miram els visors per detectar els obstacles
